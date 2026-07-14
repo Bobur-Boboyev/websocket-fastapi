@@ -1,15 +1,19 @@
 import asyncio
-from websockets import connect
+import websockets
+import json
+
 
 async def main():
-    uri = "ws://localhost:8000/ws"
-    async with connect(uri) as client:
-        await client.send("Hello, WebSocket!")
+    async with websockets.connect("ws://127.0.0.1:8000/ws") as ws:
+        print("Connected")
 
-        response = await client.recv()
-        print(f"Received: {response}")
+        while True:
+            message = await ws.recv()
+            order = json.loads(message)
 
-    
+            print("\n=== NEW ORDER ===")
+            print(f"Food : {order['food']}")
+            print(f"Count: {order['count']}")
 
 
 asyncio.run(main())
